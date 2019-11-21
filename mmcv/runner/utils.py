@@ -4,9 +4,10 @@ import time
 from getpass import getuser
 from socket import gethostname
 
-import mmcv
 import torch
 import torch.distributed as dist
+
+import mmcv
 
 
 def get_host_info():
@@ -17,7 +18,10 @@ def get_dist_info():
     if torch.__version__ < '1.0':
         initialized = dist._initialized
     else:
-        initialized = dist.is_initialized()
+        if dist.is_available():
+            initialized = dist.is_initialized()
+        else:
+            initialized = False
     if initialized:
         rank = dist.get_rank()
         world_size = dist.get_world_size()

@@ -110,7 +110,8 @@ def imshow_det_bboxes(img,
     assert labels.ndim == 1
     assert bboxes.shape[0] == labels.shape[0]
     assert bboxes.shape[1] == 4 or bboxes.shape[1] == 5
-    img = imread(img)
+    if isinstance(img, str):
+        img = imread(img)
 
     if score_thr > 0:
         assert bboxes.shape[1] == 5
@@ -139,3 +140,69 @@ def imshow_det_bboxes(img,
         imshow(img, win_name, wait_time)
     if out_file is not None:
         imwrite(img, out_file)
+
+
+import random
+import seaborn as sns
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+matplotlib.use('Agg')
+
+
+def random_color(seed):
+    random.seed(seed)
+    colors = sns.color_palette()
+    color = random.choice(colors)
+    return color
+
+
+def imshow_bboxes_w_ids(img,
+                        bboxes,
+                        ids,
+                        score_thr=0,
+                        thickness=1,
+                        font_scale=0.5,
+                        show=False,
+                        win_name='',
+                        wait_time=0,
+                        out_file=None,
+                        draw_score=False):
+    assert bboxes.ndim == 2
+    assert ids.ndim == 1
+    assert bboxes.shape[0] == ids.shape[0]
+    assert bboxes.shape[1] == 4 or bboxes.shape[1] == 5
+    if isinstance(img, str):
+        img = plt.imread(img)
+        plt.show(img)
+
+    if score_thr > 0:
+        assert bboxes.shape[1] >= 5
+        scores = bboxes[:, 4]
+        inds = scores > score_thr
+        bboxes = bboxes[inds, :]
+        ids = ids[inds]
+
+    for bbox, id in zip(bboxes, ids):
+        bbox_int = bbox.astype(np.int32)
+        left_top = (bbox_int[0], bbox_int[1])
+        w = bbox_int[2] - bbox_int[0] + 1
+        h = bbox_int[3] - bbox_int[1] + 1
+        color = random_color(id)
+        plt.gca().add_patch(
+            Rectangle(
+                left_top, w, h, thickness, edgecolor=color, facecolor='none'))
+        label_text = '{}'.format(int(id))
+        bg_height = 12
+        bg_width = len(label_text) * bg_height
+        plt.gca().add_patch(
+            Rectangle(
+                left_top, bg_width, bg_height, thickness, edgecolor=color))
+        plt.text(left_top[0], left_top[1], label_text)
+
+    if show:
+        imshow(img, win_name, wait_time)
+    if out_file is not None:
+        plt.savefig(out_file)
+
+    return img

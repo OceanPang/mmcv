@@ -142,6 +142,7 @@ def imshow_det_bboxes(img,
         imwrite(img, out_file)
 
 
+import mmcv
 import random
 import seaborn as sns
 import matplotlib
@@ -174,7 +175,15 @@ def imshow_bboxes_w_ids(img,
     assert bboxes.shape[1] == 4 or bboxes.shape[1] == 5
     if isinstance(img, str):
         img = plt.imread(img)
-        plt.show(img)
+    else:
+        img = mmcv.bgr2rgb(img)
+    plt.imshow(img)
+    plt.gca().set_axis_off()
+    plt.subplots_adjust(
+        top=1, bottom=0, right=1, left=0, hspace=None, wspace=None)
+    plt.margins(0, 0)
+    plt.gca().xaxis.set_major_locator(plt.NullLocator())
+    plt.gca().yaxis.set_major_locator(plt.NullLocator())
 
     if score_thr > 0:
         assert bboxes.shape[1] >= 5
@@ -193,16 +202,22 @@ def imshow_bboxes_w_ids(img,
             Rectangle(
                 left_top, w, h, thickness, edgecolor=color, facecolor='none'))
         label_text = '{}'.format(int(id))
-        bg_height = 12
-        bg_width = len(label_text) * bg_height
+        bg_height = 11
+        bg_width = 10
+        bg_width = len(label_text) * bg_width
         plt.gca().add_patch(
-            Rectangle(
-                left_top, bg_width, bg_height, thickness, edgecolor=color))
-        plt.text(left_top[0], left_top[1], label_text)
+            Rectangle((left_top[0], left_top[1] - bg_height),
+                      bg_width,
+                      bg_height,
+                      thickness,
+                      edgecolor=color,
+                      facecolor=color))
+        plt.text(left_top[0], left_top[1], label_text, fontsize=5)
 
     if show:
         imshow(img, win_name, wait_time)
     if out_file is not None:
-        plt.savefig(out_file)
+        plt.savefig(out_file, dpi=300, bbox_inches='tight', pad_inches=0.0)
+    plt.clf()
 
     return img

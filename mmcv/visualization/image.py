@@ -203,7 +203,7 @@ def imshow_bboxes_w_ids(img,
                 left_top, w, h, thickness, edgecolor=color, facecolor='none'))
         label_text = '{}'.format(int(id))
         bg_height = 11
-        bg_width = 10
+        bg_width = 8
         bg_width = len(label_text) * bg_width
         plt.gca().add_patch(
             Rectangle((left_top[0], left_top[1] - bg_height),
@@ -212,7 +212,11 @@ def imshow_bboxes_w_ids(img,
                       thickness,
                       edgecolor=color,
                       facecolor=color))
-        plt.text(left_top[0], left_top[1], label_text, fontsize=5)
+        plt.text(
+            left_top[0] - 1,
+            left_top[1],
+            label_text,
+            fontsize=5)
 
     if show:
         imshow(img, win_name, wait_time)

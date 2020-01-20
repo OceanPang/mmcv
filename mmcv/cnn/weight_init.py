@@ -1,8 +1,10 @@
+# Copyright (c) Open-MMLab. All rights reserved.
 import torch.nn as nn
 
 
 def constant_init(module, val, bias=0):
-    nn.init.constant_(module.weight, val)
+    if hasattr(module, 'weight') and module.weight is not None:
+        nn.init.constant_(module.weight, val)
     if hasattr(module, 'bias') and module.bias is not None:
         nn.init.constant_(module.bias, bias)
 

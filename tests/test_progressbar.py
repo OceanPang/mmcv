@@ -1,13 +1,15 @@
+# Copyright (c) Open-MMLab. All rights reserved.
 import sys
 import time
+
 try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
 
-import pytest
+import pytest  # isort:skip
 
-import mmcv
+import mmcv  # isort:skip
 
 
 def reset_string_io(io):

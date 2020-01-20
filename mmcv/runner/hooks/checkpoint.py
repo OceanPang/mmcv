@@ -1,4 +1,5 @@
-from ..utils import master_only
+# Copyright (c) Open-MMLab. All rights reserved.
+from ..dist_utils import master_only
 from .hook import Hook
 
 

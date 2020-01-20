@@ -1,3 +1,4 @@
+# Copyright (c) Open-MMLab. All rights reserved.
 import torch
 import torch.distributed as dist
 import torch.nn as nn
@@ -9,7 +10,10 @@ from .scatter_gather import scatter_kwargs
 
 class MMDistributedDataParallel(nn.Module):
 
-    def __init__(self, module, dim=0, broadcast_buffers=True,
+    def __init__(self,
+                 module,
+                 dim=0,
+                 broadcast_buffers=True,
                  bucket_cap_mb=25):
         super(MMDistributedDataParallel, self).__init__()
         self.module = module

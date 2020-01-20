@@ -178,6 +178,7 @@ def imshow_bboxes_w_ids(img,
     else:
         img = mmcv.bgr2rgb(img)
     plt.imshow(img)
+    plt.autoscale(False)
     plt.gca().set_axis_off()
     plt.subplots_adjust(
         top=1, bottom=0, right=1, left=0, hspace=None, wspace=None)
@@ -202,8 +203,8 @@ def imshow_bboxes_w_ids(img,
             Rectangle(
                 left_top, w, h, thickness, edgecolor=color, facecolor='none'))
         label_text = '{}'.format(int(id))
-        bg_height = 11
-        bg_width = 8
+        bg_height = 15
+        bg_width = 12
         bg_width = len(label_text) * bg_width
         plt.gca().add_patch(
             Rectangle((left_top[0], left_top[1] - bg_height),
@@ -212,11 +213,7 @@ def imshow_bboxes_w_ids(img,
                       thickness,
                       edgecolor=color,
                       facecolor=color))
-        plt.text(
-            left_top[0] - 1,
-            left_top[1],
-            label_text,
-            fontsize=5)
+        plt.text(left_top[0] - 1, left_top[1], label_text, fontsize=5)
 
     if show:
         imshow(img, win_name, wait_time)
